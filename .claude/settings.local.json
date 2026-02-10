@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(dotnet:*)",
+      "Bash(curl:*)",
+      "Bash(xcopy:*)",
+      "Bash(copy:*)",
+      "Bash(robocopy:*)",
+      "Bash(powershell:*)",
+      "Bash(ls:*)",
+      "Bash(start:*)",
+      "Bash(timeout:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd.exe //C \"taskkill //F //PID 10104\")",
+      "Bash(powershell.exe:*)",
+      "Bash(file:*)",
+      "Bash(if:*)",
+      "Bash([:*)",
+      "Bash(then echo \"LibreOffice found\")",
+      "Bash(else echo \"LibreOffice NOT found - you need to install it\")",
+      "Bash(fi)",
+      "Bash(winget install:*)",
+      "Bash(soffice:*)",
+      "Bash(findstr:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
