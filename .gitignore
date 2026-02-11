@@ -130,3 +130,7 @@ appsettings.Local.json
 # Problematic files
 nul
 nul.txt
+
+# Auto memory
+.memory/
+C:\Users\*/.claude/projects/*/memory/
