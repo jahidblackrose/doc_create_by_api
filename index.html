@@ -42,6 +42,17 @@
             font-size: 14px;
         }
 
+        .badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -71,7 +82,7 @@
         .button-group {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         button {
@@ -107,18 +118,6 @@
         .btn-word:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
-        }
-
-        .btn-batch {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        .btn-batch:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(67, 233, 123, 0.3);
         }
 
         button:disabled {
@@ -159,31 +158,6 @@
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .checkbox-item {
-            flex: 1 1 45%;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: auto;
-            flex: none;
-        }
-
-        .checkbox-item label {
-            margin: 0;
-            font-weight: normal;
-            font-size: 13px;
         }
 
         .info-section {
@@ -308,6 +282,185 @@
             color: white;
         }
 
+        .api-section {
+            margin-top: 20px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            border-left: 5px solid #4facfe;
+        }
+
+        .api-section h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .api-section .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .api-section pre {
+            background: #2d3748;
+            color: #f8f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .api-section .code-block code {
+            color: #7dd3fc;
+            font-family: 'Courier New', monospace;
+        }
+
+        .api-section .step {
+            margin-bottom: 20px;
+        }
+
+        .api-section .step h4 {
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .api-section .step p {
+            color: #e0e7f5;
+            font-size: 13px;
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
+        .api-section .link {
+            display: inline-block;
+            color: #4facfe;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 10px 10px 0 0;
+            transition: all 0.3s;
+        }
+
+        .api-section .link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .questpdf-section {
+            margin-top: 20px;
+            padding: 25px;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            border-radius: 15px;
+            border-left: 5px solid #00acc1;
+        }
+
+        .questpdf-section h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .questpdf-section h3 a {
+            color: #00acc1;
+            text-decoration: none;
+        }
+
+        .questpdf-section p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .questpdf-section .license-info {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #00acc1;
+            margin: 15px 0;
+        }
+
+        .questpdf-section .license-info h4 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .questpdf-section .license-info ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .questpdf-section .license-info li {
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .questpdf-section .license-info li strong {
+            color: #00acc1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            flex: 1 1 45%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            flex: none;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .batch-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+
+        .batch-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .btn-batch {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-batch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(67, 233, 123, 0.3);
+        }
+
         .dev-section {
             margin-top: 20px;
             padding: 20px;
@@ -343,7 +496,8 @@
 <body>
     <div class="container">
         <h1>📄 Banking Document Generator</h1>
-        <p class="subtitle">Generate and download banking documents instantly</p>
+        <p class="subtitle">Generate professional banking documents instantly from templates</p>
+        <span class="badge">✨ Pure C# PDF Generation</span>
 
         <div class="form-group">
             <label for="loanId">Loan ID</label>
@@ -362,7 +516,7 @@
                 <option value="6">Letter of Indemnity</option>
                 <option value="7">Letter of Lien</option>
                 <option value="8">Personal Guarantee</option>
-                <option value="9">UDC</option>
+                <option value="9">UDC (Undertaking of Debt Creation)</option>
             </select>
         </div>
 
@@ -375,8 +529,8 @@
             </button>
         </div>
 
-        <div style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 25px;">
-            <label style="margin-bottom: 15px;">Batch Generate (Select Multiple)</label>
+        <div class="batch-section">
+            <label class="batch-label">Batch Generate (Select Multiple)</label>
             <div class="checkbox-group" id="batchCheckboxes"></div>
             <button class="btn-batch" onclick="generateBatch()">
                 <span>📦</span> Download All as ZIP
@@ -409,32 +563,73 @@
             </div>
         </div>
 
-        <div class="packages-section">
-            <h3>📦 NuGet Packages Used</h3>
-            <ul>
-                <li>
-                    <strong>QuestPDF <span class="badge badge-pdf">v2025.12.4</span></strong>
-                    PDF generation library with fluent API for creating professional PDF documents programmatically
-                </li>
-                <li>
-                    <strong>DocumentFormat.OpenXml <span class="badge badge-word">v3.0.1</span></strong>
-                    Microsoft's official OpenXML library for working with Word documents (.docx) - reads templates, replaces placeholders
-                </li>
-                <li>
-                    <strong>Microsoft.AspNetCore.OpenApi <span class="badge badge-api">v9.0.9</span></strong>
-                    ASP.NET Core OpenAPI support for Swagger documentation and API endpoints
-                </li>
-            </ul>
+        <div class="questpdf-section">
+            <h3><a href="https://www.questpdf.com/" target="_blank" rel="noopener">📕 QuestPDF Documentation</a></h3>
+            <p><strong>Community License - FREE for qualifying businesses!</strong></p>
+
+            <div class="license-info">
+                <h4>✅ Free for these organizations:</h4>
+                <ul>
+                    <li><strong>Open source projects</strong> - No revenue requirement</li>
+                    <li><strong>Small businesses</strong> - Up to 5 employees AND less than $1M annual revenue</li>
+                    <li><strong>Personal use</strong> - Learning, research, or personal projects</li>
+                    <li><strong>Educational institutions</strong> - Schools, universities, students</li>
+                </ul>
+            </div>
+
+            <div class="license-info">
+                <h4>📦 Commercial license needed if:</h4>
+                <ul>
+                    <li>More than 5 employees OR</li>
+                    <li>Annual revenue exceeds $1M USD</li>
+                </ul>
+            </div>
+
+            <p><strong><a href="https://www.questpdf.com/licensing/community" target="_blank" rel="noopener">View full license details →</a></strong></p>
+        </div>
+
+        <div class="api-section">
+            <h3>🚀 Create PDFs Programmatically</h3>
+            <p>Use our API to generate banking documents in your own applications!</p>
+
+            <div class="code-block">
+                <div class="step">
+                    <h4>Step 1: Install Dependencies</h4>
+                    <p><strong>.NET 9 SDK</strong> - Download from <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target="_blank" rel="noopener">dotnet.microsoft.com</a></p>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: Make API Request</h4>
+                    <p>Send a POST request to generate documents:</p>
+                    <pre><code>POST http://localhost:5165/api/document/generate
+Content-Type: application/json
+
+{
+  "loanId": 12345,
+  "documentType": 0,
+  "outputFormat": 1
+}</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: Receive PDF File</h4>
+                    <p>API returns the generated PDF as binary data</p>
+                </div>
+            </div>
+
+            <a href="https://github.com/jahidblackrose/doc_create_by_api" class="link" target="_blank" rel="noopener">
+                📖 View on GitHub &rarr; Full Source Code
+            </a>
+            <a href="https://github.com/jahidblackrose/doc_create_by_api/blob/main/DEVELOPER.md" class="link" target="_blank" rel="noopener">
+                🛠️ Developer Guide &rarr; Add Custom Documents
+            </a>
         </div>
 
         <div class="dev-section">
-            <h3>🛠️ Developer Documentation</h3>
-            <p><strong>Want to add a new document type?</strong></p>
-            <p>See <code>DEVELOPER.md</code> for complete guide on:</p>
-            <p>• Creating data models</p>
-            <p>• Generating Word templates</p>
-            <p>• Adding document types to the API</p>
-            <p>• Testing your new document</p>
+            <h3>🛠️ For Developers</h3>
+            <p>Want to add your own document types or customize templates?</p>
+            <p>Check out our developer documentation for:</p>
+            <a href="DEVELOPER.md" class="link">📖 Read DEVELOPER.md</a>
         </div>
     </div>
 
@@ -528,7 +723,7 @@
 
                 showStatus(`${format} document generated successfully!`, 'success');
             } catch (error) {
-                showStatus(`Error: ${error.message}. Make sure the API is running on http://localhost:5165`, 'error');
+                showStatus(`Error: ${error.message}. Make sure to API is running on http://localhost:5165`, 'error');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
@@ -586,7 +781,7 @@
 
                 showStatus(`ZIP file with ${checkboxes.length} documents generated successfully!`, 'success');
             } catch (error) {
-                showStatus(`Error: ${error.message}. Make sure the API is running on http://localhost:5165`, 'error');
+                showStatus(`Error: ${error.message}. Make sure to API is running on http://localhost:5165`, 'error');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
