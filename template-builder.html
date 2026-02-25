@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Builder - Auto Generate API Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel h2::before {
+            content: "📋";
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+
+        .upload-area.dragover {
+            background: #e8f0fe;
+            border-color: #4285f4;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            color: #888;
+            font-size: 13px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            margin-top: 10px;
+        }
+
+        .found-placeholders {
+            margin-top: 20px;
+        }
+
+        .found-placeholders h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .placeholders-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .placeholder-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-section {
+            background: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .code-header {
+            background: #323232;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-title {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        .code-content {
+            padding: 15px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        pre {
+            margin: 0;
+            color: #d4d4d4;
+            font-size: 13px;
+            line-height: 1.6;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .code-content .keyword { color: #569cd6; }
+        .code-content .type { color: #4ec9b0; }
+        .code-content .string { color: #ce9178; }
+        .code-content .comment { color: #6a9955; }
+        .code-content .number { color: #b5cea8; }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #43e97b;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .error-section {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .error-section h3 {
+            color: #c53030;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .error-section p {
+            color: #742a2a;
+            font-size: 13px;
+        }
+
+        .api-info {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .api-info h3 {
+            color: #00838f;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .api-info pre {
+            background: #fff;
+            color: #333;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 Template Builder</h1>
+        <p>Upload a Word document and auto-generate all C# code for your API</p>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Panel: Upload and Configuration -->
+        <div class="panel">
+            <h2>Step 1: Upload Template</h2>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📄</div>
+                <div class="upload-text">Drop your Word document here</div>
+                <div class="upload-text">or click to browse</div>
+                <div class="upload-hint">Supports .docx files with placeholders like {Name}, {Address}</div>
+            </div>
+            <input type="file" id="fileInput" accept=".docx">
+
+            <div class="input-group">
+                <label for="documentName">Document Name (PascalCase)</label>
+                <input type="text" id="documentName" placeholder="e.g., AccountStatement, LoanAgreement">
+            </div>
+
+            <div class="input-group">
+                <label for="documentTypeValue">Document Type Enum Value</label>
+                <input type="number" id="documentTypeValue" placeholder="e.g., 10" min="0">
+            </div>
+
+            <button class="btn" id="generateBtn" disabled>Generate Code ✨</button>
+            <button class="btn btn-secondary" id="downloadAllBtn" disabled>Download All Files 📦</button>
+
+            <div class="found-placeholders" id="foundPlaceholders" style="display:none;">
+                <h3>Found Placeholders:</h3>
+                <div class="placeholders-list" id="placeholdersList"></div>
+            </div>
+
+            <div class="error-section" id="errorSection" style="display:none;">
+                <h3>❌ Error</h3>
+                <p id="errorMessage"></p>
+            </div>
+        </div>
+
+        <!-- Right Panel: Generated Code -->
+        <div class="panel">
+            <h2>Step 2: Copy Generated Code</h2>
+            <div id="codeOutput"></div>
+        </div>
+
+        <!-- Full Width: API Usage Info -->
+        <div class="panel full-width">
+            <h2>Step 3: API Call Format</h2>
+            <div class="api-info" id="apiInfo">
+                <p>Upload a document and generate code to see the API call format.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">Copied to clipboard!</div>
+
+    <script>
+        let extractedPlaceholders = [];
+        let generatedFiles = {};
+
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const documentNameInput = document.getElementById('documentName');
+        const documentTypeValueInput = document.getElementById('documentTypeValue');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const foundPlaceholders = document.getElementById('foundPlaceholders');
+        const placeholdersList = document.getElementById('placeholdersList');
+        const codeOutput = document.getElementById('codeOutput');
+        const errorSection = document.getElementById('errorSection');
+        const errorMessage = document.getElementById('errorMessage');
+        const apiInfo = document.getElementById('apiInfo');
+        const notification = document.getElementById('notification');
+
+        // File Upload Handling
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // Handle File Upload
+        async function handleFile(file) {
+            hideError();
+
+            if (!file.name.endsWith('.docx')) {
+                showError('Please upload a .docx file');
+                return;
+            }
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+                const text = result.value;
+
+                extractedPlaceholders = extractPlaceholders(text);
+
+                if (extractedPlaceholders.length === 0) {
+                    showError('No placeholders found! Use format like {PropertyName} in your document.');
+                    return;
+                }
+
+                displayPlaceholders(extractedPlaceholders);
+                updateGenerateButton();
+            } catch (error) {
+                showError('Failed to read file: ' + error.message);
+            }
+        }
+
+        // Extract placeholders from text
+        function extractPlaceholders(text) {
+            const pattern = /\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g;
+            const placeholders = new Set();
+            let match;
+
+            while ((match = pattern.exec(text)) !== null) {
+                placeholders.add(match[1]);
+            }
+
+            return Array.from(placeholders).sort();
+        }
+
+        // Display found placeholders
+        function displayPlaceholders(placeholders) {
+            placeholdersList.innerHTML = '';
+            placeholders.forEach(p => {
+                const tag = document.createElement('div');
+                tag.className = 'placeholder-tag';
+                tag.textContent = `{${p}}`;
+                placeholdersList.appendChild(tag);
+            });
+            foundPlaceholders.style.display = 'block';
+        }
+
+        // Update generate button state
+        function updateGenerateButton() {
+            const hasPlaceholders = extractedPlaceholders.length > 0;
+            const hasName = documentNameInput.value.trim() !== '';
+            const hasTypeValue = documentTypeValueInput.value.trim() !== '';
+
+            generateBtn.disabled = !(hasPlaceholders && hasName && hasTypeValue);
+        }
+
+        documentNameInput.addEventListener('input', updateGenerateButton);
+        documentTypeValueInput.addEventListener('input', updateGenerateButton);
+
+        // Generate Code
+        generateBtn.addEventListener('click', () => {
+            const documentName = toPascalCase(documentNameInput.value.trim());
+            const documentTypeValue = parseInt(documentTypeValueInput.value.trim());
+
+            generatedFiles = {
+                [`DocumentType.cs`]: generateDocumentTypeEnum(documentName, documentTypeValue),
+                [`${documentName}Data.cs`]: generateModelClass(documentName),
+                [`WordDocumentService.cs`]: generateServiceMethods(documentName),
+                [`index.html`]: generateFrontendUpdate(documentName, documentTypeValue),
+                [`API-README.md`]: generateApiDocumentation(documentName, documentTypeValue)
+            };
+
+            displayCode();
+            displayApiInfo(documentName, documentTypeValue);
+            downloadAllBtn.disabled = false;
+        });
+
+        // Convert to PascalCase
+        function toPascalCase(str) {
+            return str
+                .replace(/[^a-zA-Z0-9]/g, ' ')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join('');
+        }
+
+        // Generate DocumentType enum addition
+        function generateDocumentTypeEnum(documentName, typeValue) {
+            return `// Add this to Models/DocumentType.cs
+
+public enum DocumentType
+{
+    // ... existing values ...
+    LoanProposal = 0,
+    PromissoryNote = 1,
+    // ... more existing values ...
+    UDC = 9,
+
+    ${documentName} = ${typeValue}  // <-- Add this line
+}`;
+        }
+
+        // Generate Model Class
+        function generateModelClass(documentName) {
+            const properties = extractedPlaceholders.map(p => {
+                const pascalName = toPascalCase(p);
+                return `    public string ${pascalName} { get; set; } = string.Empty;`;
+            }).join('\n');
+
+            return `using System;
+
+namespace BankingDocumentAPI.Models
+{
+    public class ${documentName}Data
+    {
+        // Response properties
+        public string status { get; set; } = "200";
+        public string message { get; set; } = "success";
+
+        // Document properties
+${properties}
+
+        // Common fields
+        public string BranchName { get; set; } = "Main Branch";
+        public string BankName { get; set; } = "ABC Bank Ltd.";
+        public string BankAddress { get; set; } = "123 Banking Street, City";
+        public string ReferenceNumber { get; set; } = string.Empty;
+        public string GeneratedDate { get; set; } = string.Empty;
+    }
+}`;
+        }
+
+        // Infer C# type from property name
+        function inferCSharpType(propertyName) {
+            const lower = propertyName.toLowerCase();
+
+            if (lower.includes('amount') || lower.includes('balance') ||
+                lower.includes('price') || lower.includes('rate') ||
+                lower.includes('total') || lower.includes('loan')) {
+                return 'decimal';
+            }
+
+            if (lower.includes('date') || lower.includes('time') ||
+                lower.includes('dob') || lower.includes('birthdate')) {
+                return 'DateTime';
+            }
+
+            if (lower.includes('age') || lower.includes('count') ||
+                lower.includes('number') || lower.includes('id') ||
+                lower.includes('quantity') || lower.includes('term')) {
+                return 'int';
+            }
+
+            if (lower.includes('is') || lower.includes('has') ||
+                lower.includes('active') || lower.includes('enabled')) {
+                return 'bool';
+            }
+
+            return 'string';
+        }
+
+        // Get default value
+        function getDefaultValue(csType) {
+            switch (csType) {
+                case 'string': return '= string.Empty;';
+                case 'int': return '= 0;';
+                case 'decimal': return '= 0m;';
+                case 'DateTime': return '';
+                case 'bool': return '= false;';
+                default: return '= string.Empty;';
+            }
+        }
+
+        // Generate Service Methods
+        function generateServiceMethods(documentName) {
+            const mockDataValues = extractedPlaceholders.map(p => {
+                const pascalName = toPascalCase(p);
+                const mockValue = getMockValue(p, 'string');
+                return `        ${pascalName} = ${mockValue},`;
+            }).join('\n');
+
+            return `// Add these methods to Services/WordDocumentService.cs
+
+private ${documentName}Data Get${documentName}MockData(long loanId)
+{
+    return new ${documentName}Data
+    {
+        // Response properties
+        status = "200",
+        message = "success",
+
+        // Document properties
+${mockDataValues}
+        BranchName = "Main Branch",
+        BankName = "ABC Bank Ltd.",
+        BankAddress = "123 Banking Street, City",
+        ReferenceNumber = $"{documentName}/{DateTime.Now.Year}/{loanId}",
+        GeneratedDate = DateTime.Now.ToString("dd-MMM-yyyy")
+    };
+}
+
+// Add this case to the switch statement in GenerateSimpleWordFile method:
+case DocumentType.${documentName}:
+    data = Get${documentName}MockData(loanId);
+    templateName = "${documentName}.docx";
+    break;`;
+        }
+
+        // Get mock value based on property name and type
+        function getMockValue(propertyName, csType) {
+            const lower = propertyName.toLowerCase();
+
+            // All values are now strings
+            if (lower.includes('name')) return '"John Doe"';
+            if (lower.includes('address')) return '"123 Main Street, City"';
+            if (lower.includes('phone') || lower.includes('mobile')) return '"+880 1XXX-XXXXXX"';
+            if (lower.includes('email')) return '"john.doe@example.com"';
+            if (lower.includes('account') && lower.includes('number')) return '"1234567890"';
+            if (lower.includes('reference') || lower.includes('ref')) return '$"REF/{DateTime.Now.Year}/{loanId}"';
+            if (lower.includes('branch')) return '"Main Branch"';
+            if (lower.includes('bank') && lower.includes('name')) return '"ABC Bank Ltd."';
+
+            // Numbers - return as string
+            if (lower.includes('amount') || lower.includes('loan')) return '"50000"';
+            if (lower.includes('rate') || lower.includes('interest')) return '"12.5"';
+            if (lower.includes('term') || lower.includes('month')) return '"36"';
+            if (lower.includes('age')) return '"35"';
+            if (lower.includes('balance')) return '"100000"';
+            if (lower.includes('id')) return '"12345"';
+
+            // Dates - return as string
+            if (lower.includes('date') || lower.includes('time')) return 'DateTime.Now.ToString("dd-MMM-yyyy")';
+            if (lower.includes('birth') || lower.includes('dob')) return 'new DateTime(1990, 1, 1).ToString("dd-MMM-yyyy")';
+            if (lower.includes('start')) return 'DateTime.Now.AddMonths(-12).ToString("dd-MMM-yyyy")';
+            if (lower.includes('end') || lower.includes('maturity')) return 'DateTime.Now.AddYears(5).ToString("dd-MMM-yyyy")';
+
+            // Booleans - return as string
+            if (lower.includes('is') || lower.includes('has') || lower.includes('active') || lower.includes('enabled')) {
+                return '"true"';
+            }
+
+            return '"Sample Value"';
+        }
+
+        // Generate Frontend Update
+        function generateFrontendUpdate(documentName, typeValue) {
+            return `<!-- Add this option to index.html documentType select -->
+
+<option value="${typeValue}">${documentName}</option>
+
+<!-- Add this to the documentTypes array in JavaScript -->
+
+const documentTypes = [
+    'LoanProposal',
+    'PromissoryNote',
+    // ... existing types ...
+    'UDC',
+    '${documentName}'  // <-- Add this line
+];`;
+        }
+
+        // Generate API Documentation
+        function generateApiDocumentation(documentName, typeValue) {
+            const mockData = {
+                status: "200",
+                message: "success"
+            };
+            extractedPlaceholders.forEach(p => {
+                const pascalName = toPascalCase(p);
+                const mockValue = getMockValue(p, 'string').replace(/"/g, '').replace(/\$/g, '').replace('DateTime.Now.Year', '2024').replace('loanId', '12345').replace('DateTime.Now.AddMonths(-12).ToString("dd-MMM-yyyy")', '2024-01-13').replace('DateTime.Now.AddYears(5).ToString("dd-MMM-yyyy")', '2029-01-13').replace('DateTime.Now.ToString("dd-MMM-yyyy")', '13-Feb-2025').replace('new DateTime(1990, 1, 1).ToString("dd-MMM-yyyy")', '01-Jan-1990');
+                mockData[pascalName] = mockValue;
+            });
+
+            return `# ${documentName} Document API
+
+## API Endpoint
+
+\`\`\`http
+POST http://localhost:5165/api/document/generate
+Content-Type: application/json
+
+{
+  "loanId": 12345,
+  "documentType": ${typeValue},
+  "outputFormat": 1
+}
+\`\`\`
+
+## Parameters
+
+- **loanId**: integer - Loan/Account ID
+- **documentType**: ${typeValue} (${documentName})
+- **outputFormat**: 0 for DOCX, 1 for PDF
+
+## Model Structure
+
+All properties are **string type** with **status** and **message** included.
+
+\`\`\`csharp
+public class ${documentName}Data
+{
+    public string status { get; set; } = "200";
+    public string message { get; set; } = "success";
+    public string PropertyName { get; set; } = string.Empty;
+    // ... more properties
+}
+\`\`\`
+
+## Example Data
+
+\`\`\`json
+${JSON.stringify(mockData, null, 2)}
+\`\`\`
+
+## Response
+
+Returns binary file data (PDF or DOCX)
+
+## JavaScript Example
+
+\`\`\`javascript
+async function generate${documentName}(loanId) {
+    const response = await fetch('http://localhost:5165/api/document/generate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            loanId: loanId,
+            documentType: ${typeValue},
+            outputFormat: 1
+        })
+    });
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '${documentName}_' + loanId + '.pdf';
+    a.click();
+}
+\`\`\`
+
+## c# Example
+
+\`\`\`csharp
+using HttpClient client = new();
+var payload = new {
+    loanId = 12345,
+    documentType = ${typeValue},
+    outputFormat = 1
+};
+
+var response = await client.PostAsJsonAsync(
+    "http://localhost:5165/api/document/generate", payload);
+
+var bytes = await response.Content.ReadAsByteArrayAsync();
+await File.WriteAllBytesAsync("${documentName}.pdf", bytes);
+\`\`\`
+`;
+        }
+
+        // Display generated code
+        function displayCode() {
+            codeOutput.innerHTML = '';
+
+            Object.entries(generatedFiles).forEach(([fileName, content]) => {
+                const section = document.createElement('div');
+                section.className = 'code-section';
+
+                const header = document.createElement('div');
+                header.className = 'code-header';
+
+                const title = document.createElement('span');
+                title.className = 'code-title';
+                title.textContent = fileName;
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = '📋 Copy';
+                copyBtn.onclick = () => copyToClipboard(content);
+
+                header.appendChild(title);
+                header.appendChild(copyBtn);
+
+                const codeContent = document.createElement('div');
+                codeContent.className = 'code-content';
+
+                const pre = document.createElement('pre');
+                pre.textContent = content;
+
+                codeContent.appendChild(pre);
+                section.appendChild(header);
+                section.appendChild(codeContent);
+                codeOutput.appendChild(section);
+            });
+        }
+
+        // Display API Info
+        function displayApiInfo(documentName, typeValue) {
+            apiInfo.innerHTML = `
+                <h3>🚀 API Call Format</h3>
+                <p><strong>Endpoint:</strong> <code>POST http://localhost:5165/api/document/generate</code></p>
+                <pre>{
+  "loanId": 12345,
+  "documentType": ${typeValue},
+  "outputFormat": 1
+}</pre>
+                <p style="margin-top:15px;"><strong>Where:</strong></p>
+                <ul style="margin-left:20px; color:#555;">
+                    <li><code>documentType: ${typeValue}</code> = <code>${documentName}</code></li>
+                    <li><code>outputFormat: 0</code> = DOCX (Word)</li>
+                    <li><code>outputFormat: 1</code> = PDF</li>
+                </ul>
+            `;
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                notification.classList.add('show');
+                setTimeout(() => notification.classList.remove('show'), 2000);
+            });
+        }
+
+        // Download all files
+        downloadAllBtn.addEventListener('click', () => {
+            Object.entries(generatedFiles).forEach(([fileName, content]) => {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+
+        // Error handling
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorSection.style.display = 'block';
+        }
+
+        function hideError() {
+            errorSection.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
